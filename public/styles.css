@@ -234,13 +234,35 @@ body {
 
 /* タブレット・スマホ幅では縦積みにしてレイアウト崩れを防ぐ */
 @media (max-width: 900px) {
-  #layout {
+  html,
+  body {
+    height: 100%;
+  }
+
+  body {
+    display: flex;
     flex-direction: column;
+  }
+
+  #layout {
+    flex: 1;
+    flex-direction: column;
+    min-height: 0;
   }
 
   #video-area,
   #side-area {
     width: 100%;
     min-width: 0;
+  }
+
+  /* 配信エリアの下にコメントエリアを画面下端まで伸ばし、余白ができないようにする */
+  #side-area {
+    flex: 1;
+    min-height: 0;
+  }
+
+  #comment-area {
+    min-height: 0;
   }
 }
