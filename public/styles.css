@@ -2,11 +2,18 @@
   box-sizing: border-box;
 }
 
+html,
+body {
+  height: 100%;
+}
+
 body {
   margin: 0;
   font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
   background-color: #f2f2f2;
   color: #222;
+  display: flex;
+  flex-direction: column;
 }
 
 /* ヘッダー */
@@ -14,6 +21,7 @@ body {
   padding: 16px 24px;
   background-color: #1f2937;
   color: #fff;
+  flex-shrink: 0;
 }
 
 #app-header h1 {
@@ -24,9 +32,12 @@ body {
 
 /* 全体レイアウト */
 #layout {
+  flex: 1;
   display: flex;
   gap: 16px;
   padding: 16px;
+  align-items: flex-start;
+  min-height: 0;
 }
 
 .box {
@@ -136,6 +147,8 @@ body {
   display: flex;
   flex-direction: column;
   gap: 16px;
+  align-self: stretch;
+  min-height: 0;
 }
 
 /* コメント表示領域 */
@@ -234,20 +247,8 @@ body {
 
 /* タブレット・スマホ幅では縦積みにしてレイアウト崩れを防ぐ */
 @media (max-width: 900px) {
-  html,
-  body {
-    height: 100%;
-  }
-
-  body {
-    display: flex;
-    flex-direction: column;
-  }
-
   #layout {
-    flex: 1;
     flex-direction: column;
-    min-height: 0;
   }
 
   #video-area,
@@ -256,13 +257,8 @@ body {
     min-width: 0;
   }
 
-  /* 配信エリアの下にコメントエリアを画面下端まで伸ばし、余白ができないようにする */
+  /* 縦積みでは幅方向のstretchは効かないため、高さ方向は改めてflexで伸ばす */
   #side-area {
     flex: 1;
-    min-height: 0;
-  }
-
-  #comment-area {
-    min-height: 0;
   }
 }
