@@ -5,9 +5,71 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>視聴画面</title>
     <link rel="stylesheet" href="/styles.css" />
-    <script src="/main.js" defer></script>
+    <script type="module" src="/main.js"></script>
+    <script type="module" src="/comments.js"></script>
   </head>
   <body>
-    <h1>視聴画面</h1>
+    <header id="app-header">
+      <h1>ライブ配信視聴画面</h1>
+    </header>
+
+    <main id="layout">
+      <section id="video-area" class="box">
+        <div class="video-player">
+          <span class="live-badge">LIVE</span>
+          <span class="viewer-count">👁 1,234</span>
+          <video id="stream-video" class="stream-video" muted playsinline controls></video>
+        </div>
+        <div class="stream-info">
+          <div class="streamer-avatar"></div>
+          <div class="stream-text">
+            <h2 class="stream-title">配信タイトルがここに入ります</h2>
+            <p class="stream-sub">配信者名 ・ カテゴリ</p>
+          </div>
+        </div>
+      </section>
+
+      <aside id="side-area">
+        <section id="comment-area" class="box">
+          <h2 class="box-label">コメント</h2>
+          <ul class="comment-list">
+            <li class="comment-item">
+              <span class="comment-name">ユーザーA</span>
+              <p class="comment-text">こんにちは!</p>
+            </li>
+            <li class="comment-item">
+              <span class="comment-name">ユーザーB</span>
+              <p class="comment-text">応援してます!</p>
+            </li>
+            <li class="comment-item comment-item--gift">
+              <span class="comment-name">ユーザーC</span>
+              <p class="comment-text">🎁 アイテムを贈りました</p>
+            </li>
+            <li class="comment-item">
+              <span class="comment-name">ユーザーD</span>
+              <p class="comment-text">今日も楽しみです</p>
+            </li>
+          </ul>
+        </section>
+
+        <section id="comment-form-area" class="box">
+          <div class="item-row">
+            <button type="button" class="item-button" data-item-id="heart">❤️</button>
+            <button type="button" class="item-button" data-item-id="star">⭐</button>
+            <button type="button" class="item-button" data-item-id="flower">🌸</button>
+          </div>
+          <form class="comment-form">
+            <textarea
+              class="comment-input"
+              placeholder="コメントを入力"
+              maxlength="200"
+              rows="1"
+            ></textarea>
+            <button type="submit" class="send-button">送信</button>
+          </form>
+          <p class="comment-error" hidden></p>
+        </section>
+      </aside>
+    </main>
   </body>
 </html>

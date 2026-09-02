@@ -48,7 +48,7 @@
 
   <script>
     // ⚠️ 講師が案内するサーバーの URL に書き換えてください（最後に / は付けない）
-    const SERVER_URL = "https://sse-chat.deno.dev";
+    const SERVER_URL = "https://sse-demo.takerucam.deno.net";
 
     const messages = document.getElementById("messages");
     const form = document.getElementById("form");
@@ -65,6 +65,13 @@
     //   eventSource.onmessage = (event) => { ... };  // event.data に本文が入っている
 
     // ここにコードを書く ↓
+    //受信機を作って、SSEのURLにチューニングを合わせる
+    const eventSource = new EventSource(`${SERVER_URL}/events`);
+
+    //メッセージが1件届くたびに、この関数が自動で呼ばれる。
+    eventSource.onmessage = (event) => {
+      addMessage(event.data);
+    }
 
 
 
@@ -89,9 +96,11 @@
       //   await fetch(送信先のURL, { method: "POST", body: 送りたい文字列 });
 
       // ここにコードを書く ↓
-
-
-
+      //fetchでサーバーにPOSTする
+      await fetch(`${SERVER_URL}/send`, {
+        method: "POST",
+        body: input.value
+      });
       input.value = "";
     });
   </script>
