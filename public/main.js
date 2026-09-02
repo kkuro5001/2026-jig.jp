@@ -3,7 +3,7 @@ import Hls from "hls.js";
 const STREAM_URL = "https://intern-hls-server.tomaton.workers.dev/stream.m3u8";
 
 const video = document.getElementById("stream-video");
-
+//ライブの再生
 // 一時停止→再開時に、止めていた位置ではなく配信の最新地点(ライブエッジ)から
 // 再生を続けられるようにする。getLiveEdgeはHls側/ネイティブHLS側で取得方法が違うため関数で渡す。
 function attachLiveResume(video, getLiveEdge) {

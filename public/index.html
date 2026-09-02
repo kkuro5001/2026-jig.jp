@@ -6,6 +6,7 @@
     <title>視聴画面</title>
     <link rel="stylesheet" href="/styles.css" />
     <script type="module" src="/main.js"></script>
+    <script type="module" src="/comments.js"></script>
   </head>
   <body>
     <header id="app-header">
@@ -53,9 +54,9 @@
 
         <section id="comment-form-area" class="box">
           <div class="item-row">
-            <button type="button" class="item-button">🎁</button>
-            <button type="button" class="item-button">⭐</button>
-            <button type="button" class="item-button">❤️</button>
+            <button type="button" class="item-button" data-item-id="heart">❤️</button>
+            <button type="button" class="item-button" data-item-id="star">⭐</button>
+            <button type="button" class="item-button" data-item-id="flower">🌸</button>
           </div>
           <form class="comment-form">
             <input
