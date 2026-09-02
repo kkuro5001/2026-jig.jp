@@ -59,13 +59,15 @@
             <button type="button" class="item-button" data-item-id="flower">🌸</button>
           </div>
           <form class="comment-form">
-            <input
-              type="text"
+            <textarea
               class="comment-input"
               placeholder="コメントを入力"
-            />
+              maxlength="200"
+              rows="1"
+            ></textarea>
             <button type="submit" class="send-button">送信</button>
           </form>
+          <p class="comment-error" hidden></p>
         </section>
       </aside>
     </main>
