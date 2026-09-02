@@ -228,13 +228,19 @@ body {
 .comment-input {
   flex: 1;
   min-width: 0;
+  max-height: 200px;
   padding: 8px 12px;
   border: 1px solid #ccc;
-  border-radius: 20px;
+  border-radius: 16px;
   font-size: 0.9rem;
+  font-family: inherit;
+  line-height: 1.4;
+  resize: none;
+  overflow-y: hidden;
 }
 
 .send-button {
+  align-self: flex-end;
   padding: 8px 16px;
   border: none;
   border-radius: 20px;
@@ -243,6 +249,12 @@ body {
   font-weight: 600;
   cursor: pointer;
   flex-shrink: 0;
+}
+
+.comment-error {
+  margin: 0;
+  font-size: 0.8rem;
+  color: #dc2626;
 }
 
 /* タブレット・スマホ幅では縦積みにしてレイアウト崩れを防ぐ */
