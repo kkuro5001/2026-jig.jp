@@ -21,6 +21,7 @@ const commentForm = document.querySelector(".comment-form");
 const commentInput = document.querySelector(".comment-input");
 const itemRow = document.querySelector(".item-row");
 const itemToggle = document.querySelector(".item-toggle");
+const itemIconToggle = document.querySelector(".item-icon-toggle");
 const commentError = document.querySelector(".comment-error");
 const jumpToLatestButton = document.querySelector(".jump-to-latest");
 
@@ -56,9 +57,16 @@ function clearCommentError() {
   commentError.hidden = true;
 }
 
+// ISO 8601形式のタイムスタンプを「時:分:秒」の表示用文字列に変換する
+function formatTimestamp(timestamp) {
+  const date = new Date(timestamp);
+  if (Number.isNaN(date.getTime())) return "";
+  return date.toLocaleTimeString("ja-JP", { hour: "2-digit", minute: "2-digit", second: "2-digit" });
+}
+
 // SSE で届いたコメント・アイテムを1件分、コメントリストのDOMに追加する
 // data: { id, text, item: { id, name, iconUrl } | null, timestamp }
-function addMessage({ text, item }) {
+function addMessage({ text, item, timestamp }) {
   if (!commentList) return;
 
   // 追加前に最新コメントまで見ていたかどうかを覚えておく
@@ -66,6 +74,10 @@ function addMessage({ text, item }) {
 
   const li = document.createElement("li");
   li.className = "comment-item";
+
+  const timeSpan = document.createElement("span");
+  timeSpan.className = "comment-time";
+  timeSpan.textContent = formatTimestamp(timestamp);
 
   const nameSpan = document.createElement("span");
   nameSpan.className = "comment-name";
@@ -75,6 +87,9 @@ function addMessage({ text, item }) {
 
   if (item) {
     li.classList.add("comment-item--gift");
+    if (!text) {
+      li.classList.add("comment-item--gift-only");
+    }
     if (typeof item.cost === "number") {
       li.classList.add(getCostColorClass(item.cost));
     }
@@ -96,7 +111,7 @@ function addMessage({ text, item }) {
     textP.textContent = text;
   }
 
-  li.append(nameSpan, textP);
+  li.append(timeSpan, nameSpan, textP);
   commentList.appendChild(li);
 
   // 元々最新コメントを見ていた場合だけ自動で追従させる。
@@ -254,6 +269,14 @@ itemToggle?.addEventListener("click", async () => {
   if (wasHidden) {
     renderItemButtons(await fetchItems());
   }
+});
+
+// ボタンでコメント欄のアイテムアイコン画像と「〜を贈りました」のメッセージの表示/非表示を切り替える
+itemIconToggle?.addEventListener("click", () => {
+  if (!commentList) return;
+  const isPressed = itemIconToggle.getAttribute("aria-pressed") === "true";
+  itemIconToggle.setAttribute("aria-pressed", String(!isPressed));
+  commentList.classList.toggle("hide-items", isPressed);
 });
 
 // 「最新のコメントへ」ボタン: クリックで一番下までスクロールする

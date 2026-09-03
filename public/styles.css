@@ -175,8 +175,9 @@ body {
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 1px;
 }
+
 
 .jump-to-latest {
   position: absolute;
@@ -199,9 +200,11 @@ body {
 }
 
 .comment-item {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
   padding: 8px 10px;
   border-radius: 8px;
-  background-color: #f3f4f6;
 }
 
 .comment-item--gift {
@@ -229,15 +232,32 @@ body {
   background-color: #fee2e2;
 }
 
+/* アイテム表示をオフにしているとき、背景色を消す */
+.comment-list.hide-items .comment-item--gift {
+  background-color: transparent;
+}
+
+/* アイテム表示をオフにしていて、かつコメント文が無いアイテム送信は行ごと表示しない */
+.comment-list.hide-items .comment-item--gift-only {
+  display: none;
+}
+
+.comment-time {
+  flex-shrink: 0;
+  font-size: 0.7rem;
+  color: #9ca3af;
+}
+
 .comment-name {
-  display: block;
+  flex-shrink: 0;
   font-size: 0.75rem;
   font-weight: 700;
   color: #4b5563;
-  margin-bottom: 2px;
 }
 
 .comment-text {
+  flex: 1;
+  min-width: 0;
   margin: 0;
   font-size: 0.9rem;
   line-height: 1.4;
@@ -259,7 +279,13 @@ body {
   gap: 8px;
 }
 
-.item-toggle {
+.item-panel-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.item-toggle,
+.item-icon-toggle {
   align-self: flex-start;
   border: 1px solid #ddd;
   border-radius: 16px;
@@ -267,6 +293,17 @@ body {
   padding: 6px 12px;
   font-size: 0.85rem;
   cursor: pointer;
+}
+
+.item-icon-toggle[aria-pressed="false"] {
+  border-color: #2563eb;
+  background-color: #dbeafe;
+}
+
+/* アイテム表示をオフにしているとき、コメント欄のアイテムアイコンと「〜を贈りました」のメッセージを消す */
+.comment-list.hide-items .comment-item-icon,
+.comment-list.hide-items .comment-item--gift .comment-text {
+  display: none;
 }
 
 .item-row {
