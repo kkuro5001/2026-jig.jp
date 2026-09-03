@@ -21,6 +21,7 @@ const commentForm = document.querySelector(".comment-form");
 const commentInput = document.querySelector(".comment-input");
 const itemRow = document.querySelector(".item-row");
 const itemToggle = document.querySelector(".item-toggle");
+const itemIconToggle = document.querySelector(".item-icon-toggle");
 const commentError = document.querySelector(".comment-error");
 const jumpToLatestButton = document.querySelector(".jump-to-latest");
 
@@ -86,6 +87,9 @@ function addMessage({ text, item, timestamp }) {
 
   if (item) {
     li.classList.add("comment-item--gift");
+    if (!text) {
+      li.classList.add("comment-item--gift-only");
+    }
     if (typeof item.cost === "number") {
       li.classList.add(getCostColorClass(item.cost));
     }
@@ -265,6 +269,14 @@ itemToggle?.addEventListener("click", async () => {
   if (wasHidden) {
     renderItemButtons(await fetchItems());
   }
+});
+
+// ボタンでコメント欄のアイテムアイコン画像と「〜を贈りました」のメッセージの表示/非表示を切り替える
+itemIconToggle?.addEventListener("click", () => {
+  if (!commentList) return;
+  const isPressed = itemIconToggle.getAttribute("aria-pressed") === "true";
+  itemIconToggle.setAttribute("aria-pressed", String(!isPressed));
+  commentList.classList.toggle("hide-items", isPressed);
 });
 
 // 「最新のコメントへ」ボタン: クリックで一番下までスクロールする
