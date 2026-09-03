@@ -32,31 +32,37 @@
       <aside id="side-area">
         <section id="comment-area" class="box">
           <h2 class="box-label">コメント</h2>
-          <ul class="comment-list">
-            <li class="comment-item">
-              <span class="comment-name">ユーザーA</span>
-              <p class="comment-text">こんにちは!</p>
-            </li>
-            <li class="comment-item">
-              <span class="comment-name">ユーザーB</span>
-              <p class="comment-text">応援してます!</p>
-            </li>
-            <li class="comment-item comment-item--gift">
-              <span class="comment-name">ユーザーC</span>
-              <p class="comment-text">🎁 アイテムを贈りました</p>
-            </li>
-            <li class="comment-item">
-              <span class="comment-name">ユーザーD</span>
-              <p class="comment-text">今日も楽しみです</p>
-            </li>
-          </ul>
+          <div class="comment-list-wrap">
+            <ul class="comment-list">
+              <li class="comment-item">
+                <span class="comment-name">ユーザーA</span>
+                <p class="comment-text">こんにちは!</p>
+              </li>
+              <li class="comment-item">
+                <span class="comment-name">ユーザーB</span>
+                <p class="comment-text">応援してます!</p>
+              </li>
+              <li class="comment-item comment-item--gift">
+                <span class="comment-name">ユーザーC</span>
+                <p class="comment-text">🎁 アイテムを贈りました</p>
+              </li>
+              <li class="comment-item">
+                <span class="comment-name">ユーザーD</span>
+                <p class="comment-text">今日も楽しみです</p>
+              </li>
+            </ul>
+            <button type="button" class="jump-to-latest" hidden>
+              ↓ 最新のコメントへ
+            </button>
+          </div>
         </section>
 
         <section id="comment-form-area" class="box">
-          <div class="item-row">
-            <button type="button" class="item-button" data-item-id="heart">❤️</button>
-            <button type="button" class="item-button" data-item-id="star">⭐</button>
-            <button type="button" class="item-button" data-item-id="flower">🌸</button>
+          <div class="item-panel">
+            <button type="button" class="item-toggle" aria-expanded="false">
+              🎁 アイテム
+            </button>
+            <div class="item-row" hidden></div>
           </div>
           <form class="comment-form">
             <textarea
