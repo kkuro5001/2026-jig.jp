@@ -1,6 +1,12 @@
 import Hls from "hls.js";
 
-const STREAM_URL = "https://intern-hls-server.tomaton.workers.dev/stream.m3u8";
+const HLS_SERVER_BASE = "https://intern-hls-server.tomaton.workers.dev";
+
+// URLの ?ch=<id> があればそのチャンネルのプレイリストを、無ければデフォルトチャンネルを再生する
+const channelId = new URLSearchParams(location.search).get("ch");
+const STREAM_URL = channelId
+  ? `${HLS_SERVER_BASE}/ch/${encodeURIComponent(channelId)}/stream.m3u8`
+  : `${HLS_SERVER_BASE}/stream.m3u8`;
 
 const video = document.getElementById("stream-video");
 //ライブの再生
