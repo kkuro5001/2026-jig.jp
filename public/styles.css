@@ -208,6 +208,27 @@ body {
   background-color: #fef3c7;
 }
 
+/* アイテムのコストに応じてコメント全体の背景色を変更する */
+.comment-item--gift.cost-cyan {
+  background-color: #cffafe;
+}
+
+.comment-item--gift.cost-green {
+  background-color: #dcfce7;
+}
+
+.comment-item--gift.cost-orange {
+  background-color: #ffedd5;
+}
+
+.comment-item--gift.cost-magenta {
+  background-color: #fce7f3;
+}
+
+.comment-item--gift.cost-red {
+  background-color: #fee2e2;
+}
+
 .comment-name {
   display: block;
   font-size: 0.75rem;
@@ -273,6 +294,32 @@ body {
   justify-content: center;
   padding: 0;
   flex-shrink: 0;
+}
+
+/* アイテムのコストに応じた色分け(未選択時のみ表示。選択時は下の.selectedが優先される) */
+.item-button.cost-cyan {
+  border-color: #06b6d4;
+  background-color: #cffafe;
+}
+
+.item-button.cost-green {
+  border-color: #16a34a;
+  background-color: #dcfce7;
+}
+
+.item-button.cost-orange {
+  border-color: #ea580c;
+  background-color: #ffedd5;
+}
+
+.item-button.cost-magenta {
+  border-color: #db2777;
+  background-color: #fce7f3;
+}
+
+.item-button.cost-red {
+  border-color: #dc2626;
+  background-color: #fee2e2;
 }
 
 .item-button.selected {

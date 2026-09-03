@@ -1,8 +1,17 @@
 const SERVER_URL = "https://intern-comment-server.intern-comment-server.deno.net";
 const MAX_COMMENT_LENGTH = 200;
 
-// サーバーから取得したアイテム一覧をidで引けるようにしたもの({ id, name, iconUrl }のMap)
+// サーバーから取得したアイテム一覧をidで引けるようにしたもの({ id, name, iconUrl, cost }のMap)
 const itemsById = new Map();
+
+// アイテムのコスト(10〜1000)に応じた色クラス名を返す
+function getCostColorClass(cost) {
+  if (cost <= 300) return "cost-cyan";
+  if (cost <= 500) return "cost-green";
+  if (cost <= 700) return "cost-orange";
+  if (cost <= 999) return "cost-magenta";
+  return "cost-red";
+}
 
 // 現在選択中のアイテムid(未選択ならnull)
 let selectedItemId = null;
@@ -66,6 +75,9 @@ function addMessage({ text, item }) {
 
   if (item) {
     li.classList.add("comment-item--gift");
+    if (typeof item.cost === "number") {
+      li.classList.add(getCostColorClass(item.cost));
+    }
     // アイテム一覧APIから取得したiconUrlを使ってアイコン画像を表示する
     const iconUrl = itemsById.get(item.id)?.iconUrl ?? item.iconUrl;
     if (iconUrl) {
@@ -132,7 +144,10 @@ function renderItemButtons(items) {
     button.className = "item-button";
     if (item.id === selectedItemId) button.classList.add("selected");
     button.dataset.itemId = item.id;
-    button.title = item.name;
+    button.title = typeof item.cost === "number" ? `${item.name} (${item.cost})` : item.name;
+    if (typeof item.cost === "number") {
+      button.classList.add(getCostColorClass(item.cost));
+    }
 
     const icon = document.createElement("img");
     icon.className = "item-button-icon";
