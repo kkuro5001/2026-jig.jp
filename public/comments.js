@@ -130,6 +130,7 @@ function renderItemButtons(items) {
     const button = document.createElement("button");
     button.type = "button";
     button.className = "item-button";
+    if (item.id === selectedItemId) button.classList.add("selected");
     button.dataset.itemId = item.id;
     button.title = item.name;
 
@@ -228,16 +229,17 @@ commentInput?.addEventListener("keydown", (e) => {
 // 入力のたびに欄の高さを調整する
 commentInput?.addEventListener("input", resizeCommentInput);
 
-// トグルボタンでアイテム一覧領域の開閉を切り替える
-itemToggle?.addEventListener("click", () => {
+// トグルボタンでアイテム一覧領域の開閉を切り替える。開くたびに最新のアイテム一覧に更新する
+itemToggle?.addEventListener("click", async () => {
   if (!itemRow) return;
-  const isOpen = !itemRow.hidden;
-  itemRow.hidden = isOpen;
-  itemToggle.setAttribute("aria-expanded", String(!isOpen));
-});
+  const wasHidden = itemRow.hidden;
+  itemRow.hidden = !wasHidden;
+  itemToggle.setAttribute("aria-expanded", String(wasHidden));
 
-// アイテム一覧を取得してボタンを表示する
-fetchItems().then(renderItemButtons);
+  if (wasHidden) {
+    renderItemButtons(await fetchItems());
+  }
+});
 
 // 「最新のコメントへ」ボタン: クリックで一番下までスクロールする
 jumpToLatestButton?.addEventListener("click", scrollToLatest);
