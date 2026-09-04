@@ -48,9 +48,44 @@ function createChannelItem(channel) {
   return item;
 }
 
-// 一覧をDOMに描画する
+// チャンネル一覧をジャンル(category)ごとにグループ化する。ジャンルはデータに登場した順番を維持する
+function groupChannelsByCategory(items) {
+  const groups = new Map();
+  for (const channel of items) {
+    const category = channel.category || "その他";
+    if (!groups.has(category)) {
+      groups.set(category, []);
+    }
+    groups.get(category).push(channel);
+  }
+  return groups;
+}
+
+// 1ジャンル分のセクション(見出し + チャンネル一覧)を組み立てる
+function createCategorySection(category, items) {
+  const section = document.createElement("section");
+  section.className = "channel-group";
+
+  const heading = document.createElement("h2");
+  heading.className = "channel-group-title";
+  heading.textContent = category;
+  section.appendChild(heading);
+
+  const list = document.createElement("ul");
+  list.className = "channel-list";
+  list.replaceChildren(...items.map(createChannelItem));
+  section.appendChild(list);
+
+  return section;
+}
+
+// 一覧をジャンルごとに分けてDOMに描画する
 function renderChannels() {
-  listElement.replaceChildren(...channels.map(createChannelItem));
+  const groups = groupChannelsByCategory(channels);
+  const sections = [...groups.entries()].map(([category, items]) =>
+    createCategorySection(category, items)
+  );
+  listElement.replaceChildren(...sections);
 }
 
 // エラーメッセージを表示する
