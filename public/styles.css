@@ -16,24 +16,27 @@ body {
   flex-direction: column;
 }
 
-/* ヘッダー */
+/* ヘッダー: 左=タイトル、中央=検索窓、右=リンク の3カラムグリッド(中央の検索窓を画面幅に関わらず中央揃えにするため) */
 #app-header {
   padding: 16px 24px;
   background-color: #1f2937;
   color: #fff;
   flex-shrink: 0;
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
-  justify-content: space-between;
+  column-gap: 16px;
 }
 
 #app-header h1 {
   margin: 0;
   font-size: 1.25rem;
   font-weight: 700;
+  justify-self: start;
 }
 
 .channels-link {
+  justify-self: end;
   color: #fff;
   text-decoration: none;
   font-size: 0.85rem;
@@ -45,6 +48,26 @@ body {
 
 .channels-link:hover {
   background-color: #374151;
+}
+
+.channel-search {
+  justify-self: center;
+  min-width: 220px;
+  padding: 6px 14px;
+  border: 1px solid #4b5563;
+  border-radius: 16px;
+  background-color: #111827;
+  color: #fff;
+  font-size: 0.85rem;
+}
+
+.channel-search::placeholder {
+  color: #9ca3af;
+}
+
+.channel-search:focus {
+  outline: none;
+  border-color: #2563eb;
 }
 
 /* 全体レイアウト */

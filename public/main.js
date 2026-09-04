@@ -8,6 +8,18 @@ const STREAM_URL = channelId
   ? `${HLS_SERVER_BASE}/ch/${encodeURIComponent(channelId)}/stream.m3u8`
   : `${HLS_SERVER_BASE}/stream.m3u8`;
 
+// ヘッダーの検索窓: この画面には配信一覧が無いため、入力してEnterを押すと
+// キーワード付きでチャンネル一覧画面に遷移し、そちらで絞り込みを行う
+const streamSearch = document.getElementById("stream-search");
+if (streamSearch) {
+  streamSearch.addEventListener("keydown", (event) => {
+    if (event.key !== "Enter") return;
+    const keyword = streamSearch.value.trim();
+    const query = keyword ? `?q=${encodeURIComponent(keyword)}` : "";
+    location.href = `/channels.html${query}`;
+  });
+}
+
 const video = document.getElementById("stream-video");
 //ライブの再生
 // 一時停止→再開時に、止めていた位置ではなく配信の最新地点(ライブエッジ)から
