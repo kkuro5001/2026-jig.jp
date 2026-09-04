@@ -23,7 +23,7 @@ async function fetchChannels() {
   channels = data.filter((channel) => !channel.retired);
 }
 
-// 1件分のチャンネルを、四角いサムネイル風のカード(li要素)として組み立てる
+// 1件分のチャンネルを、視聴画面の映像エリア・配信者情報と同じ見た目のカード(li要素)として組み立てる
 function createChannelItem(channel) {
   const item = document.createElement("li");
   item.className = "channel-item";
@@ -32,22 +32,42 @@ function createChannelItem(channel) {
   link.className = "channel-link";
   link.href = `/index.html?ch=${encodeURIComponent(channel.id)}`;
 
-  // 配信画面のプレビューを表示する予定の四角い枠(現状は灰色のプレースホルダー)
+  // 配信画面のプレビューを表示する予定の四角い枠(視聴画面の映像エリアと同じグラデーション+LIVEバッジ)
   const thumbnail = document.createElement("div");
   thumbnail.className = "channel-thumbnail";
+
+  const liveBadge = document.createElement("span");
+  liveBadge.className = "live-badge";
+  liveBadge.textContent = "LIVE";
+  thumbnail.appendChild(liveBadge);
+
   link.appendChild(thumbnail);
+
+  // 視聴画面の配信者情報欄(.stream-info)と同じ構成:アバター + タイトル/配信者名
+  const info = document.createElement("div");
+  info.className = "channel-info";
+
+  const avatar = document.createElement("div");
+  avatar.className = "channel-avatar";
+  info.appendChild(avatar);
+
+  const text = document.createElement("div");
+  text.className = "channel-text";
 
   const title = document.createElement("h2");
   title.className = "channel-title";
   title.textContent = channel.title;
-  link.appendChild(title);
+  text.appendChild(title);
 
   if (channel.attribution) {
     const attribution = document.createElement("p");
     attribution.className = "channel-attribution";
     attribution.textContent = channel.attribution;
-    link.appendChild(attribution);
+    text.appendChild(attribution);
   }
+
+  info.appendChild(text);
+  link.appendChild(info);
 
   item.appendChild(link);
   return item;
