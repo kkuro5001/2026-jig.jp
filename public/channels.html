@@ -10,10 +10,20 @@
   <body>
     <header id="app-header">
       <h1>チャンネル一覧</h1>
+      <input
+        id="channel-search"
+        class="channel-search"
+        type="search"
+        placeholder="配信を検索"
+        autocomplete="off"
+      />
     </header>
 
     <main id="channels-layout">
       <div id="channel-list"></div>
+      <p id="channel-no-result" class="channel-error" hidden>
+        該当する配信が見つかりませんでした。
+      </p>
       <p id="channel-error" class="channel-error" hidden></p>
     </main>
   </body>

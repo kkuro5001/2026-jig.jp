@@ -5,8 +5,13 @@ const CHANNELS_URL = "https://intern-hls-server.tomaton.workers.dev/channels.jso
 // 取得したチャンネル一覧(廃止済みを除く)をモジュールスコープの変数として保持する
 let channels = [];
 
+// 検索窓に入力中のキーワード(小文字化済み)をモジュールスコープの変数として保持する
+let searchKeyword = "";
+
 const listElement = document.querySelector("#channel-list");
 const errorElement = document.querySelector("#channel-error");
+const noResultElement = document.querySelector("#channel-no-result");
+const searchInput = document.querySelector("#channel-search");
 
 // チャンネル一覧を取得し、廃止済み(retired: true)のチャンネルを除外して保持する
 async function fetchChannels() {
@@ -79,13 +84,27 @@ function createCategorySection(category, items) {
   return section;
 }
 
-// 一覧をジャンルごとに分けてDOMに描画する
+// 検索キーワードでチャンネルを絞り込む(タイトル・配信者名を対象に部分一致、大文字小文字を区別しない)
+function filterChannelsByKeyword(items, keyword) {
+  if (!keyword) {
+    return items;
+  }
+  return items.filter((channel) => {
+    const title = (channel.title || "").toLowerCase();
+    const attribution = (channel.attribution || "").toLowerCase();
+    return title.includes(keyword) || attribution.includes(keyword);
+  });
+}
+
+// 一覧をジャンルごとに分けてDOMに描画する(検索キーワードによる絞り込みを反映する)
 function renderChannels() {
-  const groups = groupChannelsByCategory(channels);
+  const filtered = filterChannelsByKeyword(channels, searchKeyword);
+  const groups = groupChannelsByCategory(filtered);
   const sections = [...groups.entries()].map(([category, items]) =>
     createCategorySection(category, items)
   );
   listElement.replaceChildren(...sections);
+  noResultElement.hidden = filtered.length !== 0;
 }
 
 // エラーメッセージを表示する
@@ -94,8 +113,23 @@ function showError(message) {
   errorElement.hidden = false;
 }
 
+// 検索窓への入力を検知し、キーワードを更新して再描画する
+searchInput.addEventListener("input", () => {
+  searchKeyword = searchInput.value.trim().toLowerCase();
+  renderChannels();
+});
+
+// 視聴画面の検索窓から遷移してきた場合、URLの ?q=<keyword> を検索窓に反映する
+function applyKeywordFromUrl() {
+  const query = new URLSearchParams(location.search).get("q");
+  if (!query) return;
+  searchInput.value = query;
+  searchKeyword = query.trim().toLowerCase();
+}
+
 async function init() {
   try {
+    applyKeywordFromUrl();
     await fetchChannels();
     renderChannels();
   } catch (error) {
