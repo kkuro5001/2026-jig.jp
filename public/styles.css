@@ -272,6 +272,11 @@ body {
   color: #4b5563;
 }
 
+.comment-gift-text {
+  flex-shrink: 0;
+  font-size: 0.9rem;
+}
+
 .comment-text {
   flex: 1;
   min-width: 0;
@@ -317,9 +322,9 @@ body {
   background-color: #dbeafe;
 }
 
-/* アイテム表示をオフにしているとき、コメント欄のアイテムアイコンと「〜を贈りました」のメッセージを消す */
+/* アイテム表示をオフにしているとき、コメント欄のアイテムアイコンと「〜を贈りました」の告知文を消す(実際のコメント文は残す) */
 .comment-list.hide-items .comment-item-icon,
-.comment-list.hide-items .comment-item--gift .comment-text {
+.comment-list.hide-items .comment-gift-text {
   display: none;
 }
 
@@ -457,39 +462,29 @@ body {
 
 .channel-link {
   display: block;
-  padding: 16px;
   color: #fff;
   text-decoration: none;
-  position: relative;
 }
 
 .channel-link:hover {
   background-color: #1f2937;
 }
 
+.channel-thumbnail {
+  aspect-ratio: 16 / 9;
+  background-color: #6b7280;
+}
+
 .channel-title {
-  margin: 0;
+  margin: 16px 16px 0;
   font-size: 1rem;
   font-weight: 700;
 }
 
 .channel-attribution {
-  margin: 8px 0 0;
+  margin: 8px 16px 16px;
   font-size: 0.8rem;
   color: #9ca3af;
-}
-
-.channel-default-badge {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  background-color: #2563eb;
-  color: #fff;
-  font-size: 0.7rem;
-  font-weight: 700;
-  padding: 4px 8px;
-  border-radius: 4px;
-  letter-spacing: 0.05em;
 }
 
 .channel-error {

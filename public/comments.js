@@ -79,8 +79,13 @@ function addMessage({ text, item, timestamp }) {
   timeSpan.className = "comment-time";
   timeSpan.textContent = formatTimestamp(timestamp);
 
+  // 送信者名を表す実データが無いため、常に「視聴者」を表示する
   const nameSpan = document.createElement("span");
   nameSpan.className = "comment-name";
+  nameSpan.textContent = "視聴者";
+
+  const giftTextSpan = document.createElement("span");
+  giftTextSpan.className = "comment-gift-text";
 
   const textP = document.createElement("p");
   textP.className = "comment-text";
@@ -100,18 +105,19 @@ function addMessage({ text, item, timestamp }) {
       icon.className = "comment-item-icon";
       icon.src = iconUrl;
       icon.alt = item.name;
-      nameSpan.appendChild(icon);
+      giftTextSpan.appendChild(icon);
     } else {
-      nameSpan.textContent = "🎁";
+      giftTextSpan.append("🎁 ");
     }
-    // コメントも一緒に送られていれば「アイテム名を贈りました」に続けて表示する
-    textP.textContent = text ? `${item.name}を贈りました: ${text}` : `${item.name}を贈りました`;
+    // 「アイテム名を贈りました」の告知文と、実際に打ち込んだコメント文を分けて持たせる
+    // (アイテム表示を消したときに告知文だけ隠し、コメント文は残せるようにするため)
+    giftTextSpan.append(`${item.name}を贈りました`);
+    textP.textContent = text ?? "";
   } else {
-    nameSpan.textContent = "視聴者";
     textP.textContent = text;
   }
 
-  li.append(timeSpan, nameSpan, textP);
+  li.append(timeSpan, nameSpan, giftTextSpan, textP);
   commentList.appendChild(li);
 
   // 元々最新コメントを見ていた場合だけ自動で追従させる。
