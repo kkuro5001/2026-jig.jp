@@ -24,6 +24,56 @@ const itemToggle = document.querySelector(".item-toggle");
 const itemIconToggle = document.querySelector(".item-icon-toggle");
 const commentError = document.querySelector(".comment-error");
 const jumpToLatestButton = document.querySelector(".jump-to-latest");
+const itemEffectLayer = document.querySelector(".item-effect-layer");
+
+// アイテム演出(アニメーション画像)を1件表示しておく時間(ミリ秒)
+const ITEM_EFFECT_DURATION_MS = 3000;
+
+// 再生待ちの演出用animationUrlを溜めておくキュー
+const itemEffectQueue = [];
+let isPlayingItemEffect = false;
+
+// 自分がこれから送信するアイテムidを送信前に積んでおくキュー(他の視聴者の送信では演出を出さないため)。
+// サーバーへの送信リクエストが完了するより先にSSEで通知が届くことがあるため、
+// レスポンス待ちにせず送信操作の直後(通信前)に積む。
+const pendingOwnItemIds = [];
+
+// pendingOwnItemIdsに指定のアイテムidがあれば1件分消費してtrueを返す(無ければfalse)
+function consumePendingOwnItem(itemId) {
+  const index = pendingOwnItemIds.indexOf(itemId);
+  if (index === -1) return false;
+  pendingOwnItemIds.splice(index, 1);
+  return true;
+}
+
+// キューの先頭から演出画像を1件取り出し、映像エリアに表示する。表示し終わったら次を再生する
+function playNextItemEffect() {
+  if (!itemEffectLayer || itemEffectQueue.length === 0) {
+    isPlayingItemEffect = false;
+    return;
+  }
+  isPlayingItemEffect = true;
+
+  const animationUrl = itemEffectQueue.shift();
+  const img = document.createElement("img");
+  img.className = "item-effect-image";
+  img.src = animationUrl;
+  itemEffectLayer.appendChild(img);
+
+  setTimeout(() => {
+    img.remove();
+    playNextItemEffect();
+  }, ITEM_EFFECT_DURATION_MS);
+}
+
+// アイテム送信時の演出をキューに追加する(演出用animationUrlが無いアイテムは無視する)
+function enqueueItemEffect(animationUrl) {
+  if (!animationUrl) return;
+  itemEffectQueue.push(animationUrl);
+  if (!isPlayingItemEffect) {
+    playNextItemEffect();
+  }
+}
 
 // スクロール位置が最新コメント付近と見なせる誤差(px)
 const BOTTOM_THRESHOLD = 24;
@@ -93,8 +143,13 @@ function addMessage({ text, item, timestamp }) {
     if (typeof item.cost === "number") {
       li.classList.add(getCostColorClass(item.cost));
     }
-    // アイテム一覧APIから取得したiconUrlを使ってアイコン画像を表示する
-    const iconUrl = itemsById.get(item.id)?.iconUrl ?? item.iconUrl;
+    // アイテム一覧APIから取得したiconUrl・animationUrlを使う
+    const knownItem = itemsById.get(item.id);
+    const iconUrl = knownItem?.iconUrl ?? item.iconUrl;
+    // 演出は自分が送信したアイテムのときだけ再生する
+    if (consumePendingOwnItem(item.id)) {
+      enqueueItemEffect(knownItem?.animationUrl);
+    }
     if (iconUrl) {
       const icon = document.createElement("img");
       icon.className = "comment-item-icon";
@@ -188,11 +243,16 @@ async function postMessage(body) {
   });
   if (!res.ok) {
     console.error("メッセージの送信に失敗しました", res.status, await res.text());
+    // 送信に失敗した分は演出も起きないので、積んでおいたアイテムidを取り消す
+    if (body.itemId) consumePendingOwnItem(body.itemId);
   }
 }
 
 if (commentList) {
   commentList.innerHTML = "";
+
+  // アイテム表示欄を開いていなくても演出を再生できるよう、先にアイテム一覧を取得しておく
+  fetchItems();
 
   const eventSource = new EventSource(`${SERVER_URL}/events`);
   eventSource.onmessage = (event) => {
@@ -241,6 +301,9 @@ commentForm?.addEventListener("submit", async (e) => {
     ...(text && { text }),
     ...(selectedItemId && { itemId: selectedItemId }),
   };
+
+  // 通信より先に、これから自分が送るアイテムidを積んでおく(SSE通知が先に届いても演出を出せるように)
+  if (body.itemId) pendingOwnItemIds.push(body.itemId);
 
   commentInput.value = "";
   resizeCommentInput();

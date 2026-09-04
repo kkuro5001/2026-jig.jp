@@ -104,6 +104,34 @@ body {
   background-color: #000;
 }
 
+/* アイテム送信時の演出(アニメーション画像)を映像の上に重ねて表示する層 */
+.item-effect-layer {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.item-effect-image {
+  max-width: 60%;
+  max-height: 60%;
+  object-fit: contain;
+  animation: item-effect-pop 0.3s ease-out;
+}
+
+@keyframes item-effect-pop {
+  from {
+    transform: scale(0.6);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
 .stream-info {
   display: flex;
   align-items: center;
