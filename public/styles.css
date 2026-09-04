@@ -614,4 +614,30 @@ body {
   #side-area {
     flex: 1;
   }
+
+  /* スマホ幅では検索窓が窮屈になるため、1行目に「タイトル+リンク」、2行目に検索窓をフル幅で配置する */
+  #app-header {
+    padding: 12px 16px;
+    grid-template-columns: 1fr auto;
+    grid-template-areas:
+      "title link"
+      "search search";
+    row-gap: 10px;
+  }
+
+  #app-header h1 {
+    grid-area: title;
+    font-size: 1.05rem;
+  }
+
+  .channels-link {
+    grid-area: link;
+  }
+
+  .channel-search {
+    grid-area: search;
+    width: 100%;
+    min-width: 0;
+    justify-self: stretch;
+  }
 }
