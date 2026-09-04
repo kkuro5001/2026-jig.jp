@@ -265,6 +265,10 @@ commentInput?.addEventListener("keydown", (e) => {
 // 入力のたびに欄の高さを調整する
 commentInput?.addEventListener("input", resizeCommentInput);
 
+// アイテムアイコンをドラッグ&ドロップした際に画像パスが挿入されないようにする
+commentInput?.addEventListener("dragover", (e) => e.preventDefault());
+commentInput?.addEventListener("drop", (e) => e.preventDefault());
+
 // トグルボタンでアイテム一覧領域の開閉を切り替える。開くたびに最新のアイテム一覧に更新する
 itemToggle?.addEventListener("click", async () => {
   if (!itemRow) return;
