@@ -18,7 +18,7 @@ async function fetchChannels() {
   channels = data.filter((channel) => !channel.retired);
 }
 
-// 1件分のチャンネルをカード(li要素)として組み立てる
+// 1件分のチャンネルを、四角いサムネイル風のカード(li要素)として組み立てる
 function createChannelItem(channel) {
   const item = document.createElement("li");
   item.className = "channel-item";
@@ -26,6 +26,11 @@ function createChannelItem(channel) {
   const link = document.createElement("a");
   link.className = "channel-link";
   link.href = `/index.html?ch=${encodeURIComponent(channel.id)}`;
+
+  // 配信画面のプレビューを表示する予定の四角い枠(現状は灰色のプレースホルダー)
+  const thumbnail = document.createElement("div");
+  thumbnail.className = "channel-thumbnail";
+  link.appendChild(thumbnail);
 
   const title = document.createElement("h2");
   title.className = "channel-title";
@@ -37,13 +42,6 @@ function createChannelItem(channel) {
     attribution.className = "channel-attribution";
     attribution.textContent = channel.attribution;
     link.appendChild(attribution);
-  }
-
-  if (channel.default) {
-    const badge = document.createElement("span");
-    badge.className = "channel-default-badge";
-    badge.textContent = "デフォルト";
-    link.appendChild(badge);
   }
 
   item.appendChild(link);
